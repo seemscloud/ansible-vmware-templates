@@ -1,0 +1,41 @@
+---
+- name: Restart SSH Service on RHEL Family
+  service:
+    name: ssh
+    state: restarted
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  listen: "Restart SSH Service"
+
+- name: Restart SSH Service on Debian Family
+  service:
+    name: sshd
+    state: restarted
+  when: ansible_distribution == "CentOS" or ansible_distribution == "OracleLinux"
+  listen: "Restart SSH Service"
+
+- name: Restart NTPD Service
+  service:
+    name: ntpd
+    state: restarted
+  when: ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 6 or
+    ansible_distribution == "CentOS" and ansible_distribution_major_version|int == 6
+  listen: "Restart Time Service"
+
+- name: Restart NTP Service
+  service:
+    name: ntp
+    state: restarted
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  listen: "Restart Time Service"
+
+- name: Restart Chrony Service
+  service:
+    name: chronyd
+    state: restarted
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version|int == 8 or
+    ansible_distribution == "CentOS" and ansible_distribution_major_version|int == 7 or
+    ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 8 or
+    ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 7
+  listen: "Restart Time Service"
+
+
