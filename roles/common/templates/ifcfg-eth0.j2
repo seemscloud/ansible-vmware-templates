@@ -1,0 +1,11 @@
+TYPE=Ethernet
+NAME={{ interface }}
+DEVICE={{ interface }}
+BOOTPROTO=none
+ONBOOT=yes
+DEFROUTE=yes
+PEERDNS=no
+PEERROUTE=no
+IPADDR={{ ansible_host }}
+NETMASK={{ netmask }}
+GATEWAY={{ gateway }}

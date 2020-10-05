@@ -1,4 +1,24 @@
 ---
+- name: Configure '/etc/sysconfig/network-scripts/ifcfg-eth0' File
+  template:
+    src: ifcfg-eth0.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_distribution == "CentOS" or ansible_distribution == "OracleLinux"
+  notify: "Restart Network Service"
+
+- name: Configure '/etc/network/interfaces.d/eth0.conf' File
+  template:
+    src: eth0.conf.j2
+    dest: /etc/network/interfaces.d/eth0.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  notify: "Restart Network Service"
+
 - name: Install Chrony Service
   package:
     update_cache: yes
@@ -8,7 +28,7 @@
     ansible_distribution == "CentOS" and ansible_distribution_major_version|int == 7 or
     ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 8 or
     ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 7
-  notify: "Restart Time Service"
+  notify: "Start Time Service"
 
 - name: Install NTP Service
   package:
@@ -19,7 +39,7 @@
     (ansible_distribution != "OracleLinux" or ansible_distribution_major_version|int != 7) and
     (ansible_distribution != "CentOS" or ansible_distribution_major_version|int != 8) and
     (ansible_distribution != "CentOS" or ansible_distribution_major_version|int != 7)
-  notify: "Restart Time Service"
+  notify: "Start Time Service"
 
 - name: Timezone to Europe/Warsaw
   timezone:
