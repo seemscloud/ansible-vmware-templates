@@ -36,14 +36,14 @@
     ansible_distribution == "CentOS" and ansible_distribution_major_version|int == 7 or
     ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 8 or
     ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 7
-  listen: "Restart Time Service"
+  listen: "Start Time Service"
 
 - name: Restart Network Service
   service:
     name: networking
     state: restarted
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
-  listen: "Restart Network Service"
+  listen: "Start Network Service"
 
 - name: Restart Network Service
   service:

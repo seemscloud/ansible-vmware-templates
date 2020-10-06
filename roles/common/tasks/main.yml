@@ -1,23 +1,39 @@
 ---
-- name: Configure '/etc/sysconfig/network-scripts/ifcfg-eth0' File
-  template:
-    src: ifcfg-eth0.j2
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
-    owner: root
-    group: root
-    mode: "0644"
-  when: ansible_distribution == "CentOS" or ansible_distribution == "OracleLinux"
-  notify: "Restart Network Service"
+- name: Install `vim` package
+  package:
+    name: vim
+    state: present
+    update_cache: yes
 
-- name: Configure '/etc/network/interfaces.d/eth0.conf' File
-  template:
-    src: eth0.conf.j2
-    dest: /etc/network/interfaces.d/eth0.conf
+- name: Create `/root/cron.d` Directory
+  file:
+    path: /root/cron.d
     owner: root
     group: root
-    mode: "0644"
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
-  notify: "Restart Network Service"
+    mode: '0700'
+
+- name: Create `/root/cron.d/system` Directory
+  file:
+    path: /root/cron.d/system
+    owner: root
+    group: root
+    state: directory
+    mode: '0700'
+
+- name: Deploy '/root/cron.d/system/flush.sh' File
+  copy:
+    src: flush.sh
+    dest: /root/cron.d/system/flush.sh
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Add '/root/cron.d/system/flush.sh' to Cron
+  cron:
+    name: "Flush Memory"
+    minute: "*/1"
+    user: root
+    job: "/bin/bash /root/cron.d/system/flush.sh"
 
 - name: Install Chrony Service
   package:
@@ -122,3 +138,23 @@
     ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int >= 8 or
     ansible_distribution == "Debian" and ansible_distribution_major_version|int >= 9 or
     ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 16
+
+- name: Configure '/etc/sysconfig/network-scripts/ifcfg-eth0' File
+  template:
+    src: ifcfg-eth0.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_distribution == "CentOS" or ansible_distribution == "OracleLinux"
+  notify: "Restart Network Service"
+
+- name: Configure '/etc/network/interfaces.d/eth0.conf' File
+  template:
+    src: eth0.conf.j2
+    dest: /etc/network/interfaces.d/eth0.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  notify: "Restart Network Service"
