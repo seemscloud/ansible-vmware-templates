@@ -7,6 +7,8 @@ all:
     ansible_python_interpreter: python3
     ansible_become_flags: "-H -S -n -i"
     ansible_ssh_private_key_file: ~/configurations/ssh/keys/vm-templates
+
+templates:
   children:
     rhel-family:
       children:

@@ -70,13 +70,16 @@
       UseDNS yes
   notify: "Restart SSH Service"
 
-- name: Setup Hostname
-  hostname:
-    name: "{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}"
-  when: ansible_distribution != "Ubuntu" or ansible_distribution_major_version|int != 14
+- set_fact:
+    custom_hostname_by_distro: "{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}"
 
 - set_fact:
-    custom_ansbile_hostname: "{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}"
+    custom_ansbile_hostname: "{{ custom_hostname | default(custom_hostname_by_distro) }}"
+
+- name: Setup Hostname
+  hostname:
+    name: "{{ custom_ansbile_hostname }}"
+  when: ansible_distribution != "Ubuntu" or ansible_distribution_major_version|int != 14
 
 - name: Setup Hostname
   hostname:
