@@ -1,3 +1,4 @@
+nameserver0: 10.10.10.10
 nameserver1: 8.8.8.8
 nameserver2: 8.8.4.4
 
