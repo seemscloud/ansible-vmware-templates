@@ -12,5 +12,5 @@ ansible --private-key=~/configurations/ssh/keys/vm-templates \
 ### Playbook
 
 ```
-ansible-playbook -i inventory.yaml playbooks.yaml
+ansible-playbook -i inventory.yml playbook.yml
 ```
