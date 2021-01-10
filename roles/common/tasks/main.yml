@@ -67,7 +67,7 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK - UserDNS #"
     state: present
     block: |
-      UseDNS yes
+      UseDNS no
   notify: "Restart SSH Service"
 
 - set_fact:
