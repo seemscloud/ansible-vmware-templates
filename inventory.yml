@@ -13,12 +13,8 @@ templates:
       children:
         rhel-family-gen1:
           hosts:
-            centos6:
-              ansible_host: 10.10.0.20
             centos7:
               ansible_host: 10.10.0.21
-            ol6:
-              ansible_host: 10.10.0.40
             ol7:
               ansible_host: 10.10.0.41
         rhel-family-gen2:
