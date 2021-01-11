@@ -1,0 +1,18 @@
+---
+- name: Install 'openssh-server' Package
+  package:
+    update_cache: yes
+    name: openssh-server
+    state: present
+  notify: "Restart SSH Service"
+  tags: [ssh]
+
+- name: Set 'UseDNS no' in '/etc/ssh/sshd_config'
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - UserDNS #"
+    state: present
+    block: |
+      UseDNS no
+  notify: "Restart SSH Service"
+  tags: [ssh]

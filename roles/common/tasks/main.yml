@@ -1,163 +1,21 @@
 ---
-- name: Install `vim` package
-  package:
-    name: vim
-    state: present
-    update_cache: yes
+- name: Common General
+  import_tasks: common-general.yml
 
-- name: Create `/root/cron.d` Directory
-  file:
-    path: /root/cron.d
-    owner: root
-    group: root
-    mode: '0700'
+- name: Common Network
+  import_tasks: common-network.yml
 
-- name: Create `/root/cron.d/system` Directory
-  file:
-    path: /root/cron.d/system
-    owner: root
-    group: root
-    state: directory
-    mode: '0700'
+- name: Common DNS Resolver
+  import_tasks: common-resolver.yml
 
-- name: Deploy '/root/cron.d/system/flush.sh' File
-  copy:
-    src: flush.sh
-    dest: /root/cron.d/system/flush.sh
-    owner: root
-    group: root
-    mode: "0600"
+- name: Common Time Sync
+  import_tasks: common-time.yml
 
-- name: Add '/root/cron.d/system/flush.sh' to Cron
-  cron:
-    name: "Flush Memory"
-    minute: "*/1"
-    user: root
-    job: "/bin/bash /root/cron.d/system/flush.sh"
+- name: Common Cron
+  import_tasks: common-cron.yml
 
-- name: Install Chrony Service
-  package:
-    update_cache: yes
-    name: chrony
-    state: present
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version|int == 8 or
-    ansible_distribution == "CentOS" and ansible_distribution_major_version|int == 7 or
-    ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 8 or
-    ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 7
-  notify: "Start Time Service"
+- name: Common Packages
+  import_tasks: common-packages.yml
 
-- name: Install NTP Service
-  package:
-    update_cache: yes
-    name: ntp
-    state: present
-  when: (ansible_distribution != "OracleLinux" or ansible_distribution_major_version|int != 8) and
-    (ansible_distribution != "OracleLinux" or ansible_distribution_major_version|int != 7) and
-    (ansible_distribution != "CentOS" or ansible_distribution_major_version|int != 8) and
-    (ansible_distribution != "CentOS" or ansible_distribution_major_version|int != 7)
-  notify: "Start Time Service"
-
-- name: Timezone to Europe/Warsaw
-  timezone:
-    name: Europe/Warsaw
-
-- name: Disable UseDNS 'openssh-server'
-  blockinfile:
-    path: /etc/ssh/sshd_config
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - UserDNS #"
-    state: present
-    block: |
-      UseDNS no
-  notify: "Restart SSH Service"
-
-- set_fact:
-    custom_hostname_by_distro: "{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}"
-
-- set_fact:
-    custom_ansbile_hostname: "{{ custom_hostname | default(custom_hostname_by_distro) }}"
-
-- name: Setup Hostname
-  hostname:
-    name: "{{ custom_ansbile_hostname }}"
-  when: ansible_distribution != "Ubuntu" or ansible_distribution_major_version|int != 14
-
-- name: Setup Hostname
-  hostname:
-    name: "{{ custom_ansbile_hostname }}"
-    use: systemd
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int == 14 and
-    ansible_hostname != custom_ansbile_hostname
-
-- name: Configure 'hosts' File
-  template:
-    src: hosts.j2
-    dest: /etc/hosts
-    owner: root
-    group: root
-    mode: "0644"
-
-- name: Configure 'resolv.conf' File
-  template:
-    src: resolv.conf.j2
-    dest: /etc/resolv.conf
-    owner: root
-    group: root
-    mode: "0644"
-
-- name: Install 'python3'
-  package:
-    update_cache: yes
-    name: python3
-    state: present
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version|int >= 8 or
-    ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int >= 8 or
-    ansible_distribution == "Debian" and ansible_distribution_major_version|int >= 9 or
-    ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 16
-
-- name: Install 'python2'
-  package:
-    update_cache: yes
-    name: python
-    state: present
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version|int < 8 or
-    ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int < 8 or
-    ansible_distribution == "Debian" and ansible_distribution_major_version|int < 9 or
-    ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int < 16
-
-- name: Uninstall 'python3' in old Distributions
-  package:
-    name: python3
-    state: absent
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version|int < 8 or
-    ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int < 8 or
-    ansible_distribution == "Debian" and ansible_distribution_major_version|int < 9 or
-    ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int < 16
-
-- name: Uninstall 'python2' in new Distributions
-  package:
-    name: python2
-    state: absent
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version|int >= 8 or
-    ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int >= 8 or
-    ansible_distribution == "Debian" and ansible_distribution_major_version|int >= 9 or
-    ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 16
-
-- name: Configure '/etc/sysconfig/network-scripts/ifcfg-eth0' File
-  template:
-    src: ifcfg-eth0.j2
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
-    owner: root
-    group: root
-    mode: "0644"
-  when: ansible_distribution == "CentOS" or ansible_distribution == "OracleLinux"
-  notify: "Restart Network Service"
-
-- name: Configure '/etc/network/interfaces.d/eth0.conf' File
-  template:
-    src: eth0.conf.j2
-    dest: /etc/network/interfaces.d/eth0.conf
-    owner: root
-    group: root
-    mode: "0644"
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
-  notify: "Restart Network Service"
+- name: Common SSH Service
+  import_tasks: common-ssh.yml

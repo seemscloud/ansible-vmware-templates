@@ -1,51 +1,24 @@
 ---
-- name: Restart SSH Service on RHEL Family
-  service:
-    name: ssh
-    state: restarted
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
-  listen: "Restart SSH Service"
-
-- name: Restart SSH Service on Debian Family
+- name: Restart 'sshd' Service
   service:
     name: sshd
     state: restarted
-  when: ansible_distribution == "CentOS" or ansible_distribution == "OracleLinux"
   listen: "Restart SSH Service"
 
-- name: Restart NTPD Service
-  service:
-    name: ntpd
-    state: started
-  when: ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 6 or
-    ansible_distribution == "CentOS" and ansible_distribution_major_version|int == 6
-  listen: "Restart Time Service"
-
-- name: Restart NTP Service
-  service:
-    name: ntp
-    state: started
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
-  listen: "Restart Time Service"
-
-- name: Restart Chrony Service
+- name: Restart 'chronyd' Service
   service:
     name: chronyd
     state: started
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version|int == 8 or
-    ansible_distribution == "CentOS" and ansible_distribution_major_version|int == 7 or
-    ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 8 or
-    ansible_distribution == "OracleLinux" and ansible_distribution_major_version|int == 7
   listen: "Start Time Service"
 
-- name: Restart Network Service
+- name: Restart 'networking' Service
   service:
     name: networking
     state: restarted
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
   listen: "Start Network Service"
 
-- name: Restart Network Service
+- name: Restart 'network' Service
   service:
     name: network
     state: restarted

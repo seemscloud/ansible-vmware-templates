@@ -1,0 +1,14 @@
+---
+- name: Install 'chrony' Package
+  package:
+    update_cache: yes
+    name: chrony
+    state: present
+  notify: "Start Time Service"
+  tags: [time]
+
+- name: Uninstall 'ntp' Package
+  package:
+    name: ntp
+    state: absent
+  tags: [time]

@@ -1,0 +1,32 @@
+---
+- name: Timezone to 'Europe/Warsaw'
+  timezone:
+    name: Europe/Warsaw
+  tags: [general]
+
+- set_fact:
+    combined_hostname: "{{ ansible_distribution|lower }}{{ ansible_distribution_major_version }}"
+  tags: [general]
+
+- name: Setup Hostname
+  hostname:
+    name: "{{ combined_hostname }}"
+  tags: [general]
+
+- name: Configure '/etc/hosts' File
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: "0644"
+  tags: [general]
+
+- name: Deploy '/etc/issue' File
+  copy:
+    src: issue
+    dest: /etc/issue
+    owner: root
+    group: root
+    mode: "0644"
+  tags: [general]

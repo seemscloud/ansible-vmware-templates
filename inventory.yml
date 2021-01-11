@@ -25,12 +25,6 @@ templates:
               ansible_host: 10.10.0.42
     debian-family:
       children:
-        debian-family-gen1:
-          hosts:
-            debian8:
-              ansible_host: 10.10.0.50
-            ubuntu14:
-              ansible_host: 10.10.0.60
         debian-family-gen2:
           hosts:
             debian9:
@@ -41,3 +35,5 @@ templates:
               ansible_host: 10.10.0.61
             ubuntu18:
               ansible_host: 10.10.0.62
+            ubuntu20:
+              ansible_host: 10.10.0.63

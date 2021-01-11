@@ -1,0 +1,16 @@
+---
+- name: Disable 'systemd-resolved' on 'Ubuntu' / 'Debian'
+  service:
+    name: systemd-resolved
+    state: stopped
+  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+  tags: [resolver]
+
+- name: Configure '/etc/resolv.conf' File
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: "0644"
+  tags: [resolver]
