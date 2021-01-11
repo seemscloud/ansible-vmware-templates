@@ -9,31 +9,27 @@ all:
 
 templates:
   children:
-    rhel-family:
-      children:
-        rhel-family-gen1:
-          hosts:
-            centos7:
-              ansible_host: 10.10.0.21
-            ol7:
-              ansible_host: 10.10.0.41
-        rhel-family-gen2:
-          hosts:
-            centos8:
-              ansible_host: 10.10.0.22
-            ol8:
-              ansible_host: 10.10.0.42
+    rhel7-family:
+      hosts:
+        centos7:
+          ansible_host: 10.10.0.21
+        ol7:
+          ansible_host: 10.10.0.41
+    rhel8-family:
+      hosts:
+        centos8:
+          ansible_host: 10.10.0.22
+        ol8:
+          ansible_host: 10.10.0.42
     debian-family:
-      children:
-        debian-family-gen2:
-          hosts:
-            debian9:
-              ansible_host: 10.10.0.51
-            debian10:
-              ansible_host: 10.10.0.52
-            ubuntu16:
-              ansible_host: 10.10.0.61
-            ubuntu18:
-              ansible_host: 10.10.0.62
-            ubuntu20:
-              ansible_host: 10.10.0.63
+      hosts:
+        debian9:
+          ansible_host: 10.10.0.51
+        debian10:
+          ansible_host: 10.10.0.52
+        ubuntu16:
+          ansible_host: 10.10.0.61
+        ubuntu18:
+          ansible_host: 10.10.0.62
+        ubuntu20:
+          ansible_host: 10.10.0.63
