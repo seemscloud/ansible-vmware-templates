@@ -19,3 +19,6 @@
 
 - name: Common SSH Service
   import_tasks: common-ssh.yml
+
+- name: Common SCripts
+  import_tasks: common-scripts.yml

@@ -9,27 +9,23 @@ all:
 
 templates:
   children:
-    rhel7-family:
+    rhel-family:
       hosts:
         centos7:
-          ansible_host: 10.10.0.21
+          ansible_host: 10.10.5.5
+          ansible_python_interpreter: python2
         ol7:
-          ansible_host: 10.10.0.41
-    rhel8-family:
-      hosts:
-        centos8:
-          ansible_host: 10.10.0.22
+          ansible_host: 10.10.5.10
+          ansible_python_interpreter: python2
         ol8:
-          ansible_host: 10.10.0.42
+          ansible_host: 10.10.5.15
     debian-family:
       hosts:
         debian9:
-          ansible_host: 10.10.0.51
+          ansible_host: 10.10.5.20
         debian10:
-          ansible_host: 10.10.0.52
-        ubuntu16:
-          ansible_host: 10.10.0.61
+          ansible_host: 10.10.5.25
         ubuntu18:
-          ansible_host: 10.10.0.62
+          ansible_host: 10.10.5.30
         ubuntu20:
-          ansible_host: 10.10.0.63
+          ansible_host: 10.10.5.35

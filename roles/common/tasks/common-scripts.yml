@@ -1,0 +1,49 @@
+---
+- name: Create `/root/scripts` Directory
+  file:
+    path: /root/scripts
+    owner: root
+    group: root
+    state: directory
+    mode: '0700'
+  tags: [scripts]
+
+- name: Deploy '/root/scripts/clean.sh' File on 'CentOS' / 'OracleLinux'
+  copy:
+    src: clean-rhel.sh
+    dest: /root/scripts/clean.sh
+    owner: root
+    group: root
+    mode: "0600"
+  when: ansible_distribution == "CentOS" or ansible_distribution == "OracleLinux"
+  tags: [scripts]
+
+- name: Deploy '/root/scripts/clean.sh' File on 'Ubuntu' / 'Debian'
+  copy:
+    src: clean-debian.sh
+    dest: /root/scripts/clean.sh
+    owner: root
+    group: root
+    mode: "0600"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  tags: [scripts]
+
+- name: Deploy '/root/scripts/init.sh' File on 'CentOS' / 'OracleLinux'
+  copy:
+    src: init-rhel.sh
+    dest: /root/scripts/init.sh
+    owner: root
+    group: root
+    mode: "0600"
+  when: ansible_distribution == "CentOS" or ansible_distribution == "OracleLinux"
+  tags: [scripts]
+
+- name: Deploy '/root/scripts/init.sh' File on 'Ubuntu' / 'Debian'
+  copy:
+    src: init-debian.sh
+    dest: /root/scripts/init.sh
+    owner: root
+    group: root
+    mode: "0600"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  tags: [scripts]
